@@ -224,12 +224,14 @@ def process_file(filepath):
     X = Scaler.transform(X)
     
     final_preds = []
+    
     for i in range(102):
         file = 'ANN_logo_' + str(i)
-        with open('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.json', 'r') as json_file:
-            loaded_model_json = json_file.read()
-        
+        json_file = open('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.json', 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
         model = model_from_json(loaded_model_json)
+
         model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
         model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         
