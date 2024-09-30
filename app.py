@@ -69,13 +69,21 @@ def upload_file():
         filepath = write_to_csv(mab_data, 'input_data.csv')
 
         try:
-            processed_csv_path = process_file(filepath)
-            csv_data = []  
-            with open(processed_csv_path, 'r', newline='') as csvfile:
+            descriptors_path, predictions_path = process_file(filepath)
+            
+            with open(descriptors_path, 'r', newline='') as csvfile:
                 reader = csv.reader(csvfile)
-                for row in reader:
-                    csv_data.append(row)
-            return render_template('index.html', csv_path=os.path.basename(processed_csv_path), csv_data=csv_data)
+                descriptors_data = list(reader)
+                
+            with open(predictions_path, 'r', newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                predictions_data = list(reader)
+
+            return render_template('index.html',
+                                   descriptors_data=descriptors_data,
+                                   descriptors_path=os.path.basename(descriptors_path),
+                                   predictions_data=predictions_data,
+                                   predictions_path=os.path.basename(predictions_path))
         except Exception as e:
             flash(f'Error processing file: {e}')
             return redirect(request.url)

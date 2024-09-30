@@ -1,4 +1,5 @@
 # ----- Package Import ----- #
+from tabnanny import verbose
 import numpy as np
 import pandas as pd
 
@@ -16,7 +17,15 @@ import subprocess
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+import joblib
 #################
+
+def format_predictions(predictions):
+    if len(predictions.shape) > 1:
+        formatted = np.round(predictions, 3)
+    else:
+        formatted = [round(pred, 3) for pred in predictions]
+    return formatted
 
 def process_file(filepath):
 
@@ -199,15 +208,38 @@ def process_file(filepath):
     features = ['Name', 'SAP_pos_CDRH1','SAP_pos_CDRH2','SAP_pos_CDRH3','SAP_pos_CDRL1','SAP_pos_CDRL2','SAP_pos_CDRL3','SAP_pos_CDR','SAP_pos_Hv','SAP_pos_Lv','SAP_pos_Fv',
             'SCM_neg_CDRH1','SCM_neg_CDRH2','SCM_neg_CDRH3','SCM_neg_CDRL1','SCM_neg_CDRL2','SCM_neg_CDRL3','SCM_neg_CDR','SCM_neg_Hv','SCM_neg_Lv','SCM_neg_Fv',
             'SCM_pos_CDRH1','SCM_pos_CDRH2','SCM_pos_CDRH3','SCM_pos_CDRL1','SCM_pos_CDRL2','SCM_pos_CDRL3','SCM_pos_CDR','SCM_pos_Hv','SCM_pos_Lv','SCM_pos_Fv']
-    df = pd.concat([pd.DataFrame(name_list), pd.DataFrame(sap_pos), pd.DataFrame(scm_neg), pd.DataFrame(scm_pos)], ignore_index=True, axis=1,); df.columns = features
-    df.to_csv('uploads/DeepSP_descriptors.csv', index=False)
-
-    csv_filename = 'DeepSP_descriptors.csv'
-    csv_path = os.path.join('uploads', csv_filename)
-    df.to_csv(csv_path, index=False)
+    df1 = pd.concat([pd.DataFrame(name_list), pd.DataFrame(format_predictions(sap_pos)), pd.DataFrame(format_predictions(scm_neg)), pd.DataFrame(format_predictions(scm_pos))], ignore_index=True, axis=1)
+    df1.columns = features
+    descriptors_path = 'uploads/DeepSP_descriptors.csv'
+    df1.to_csv(descriptors_path, index=False)
     
-    #print(f"Processed file saved to: {csv_path}")
-    return csv_path
+    detaset_pred = pd.read_csv(descriptors_path)
+    X = detaset_pred[['SAP_pos_CDRH1','SAP_pos_CDRH2','SAP_pos_CDRH3','SAP_pos_CDRL1','SAP_pos_CDRL2','SAP_pos_CDRL3','SAP_pos_CDR','SAP_pos_Hv','SAP_pos_Lv','SAP_pos_Fv',
+            'SCM_neg_CDRH1','SCM_neg_CDRH2','SCM_neg_CDRH3','SCM_neg_CDRL1','SCM_neg_CDRL2','SCM_neg_CDRL3','SCM_neg_CDR','SCM_neg_Hv','SCM_neg_Lv','SCM_neg_Fv',
+            'SCM_pos_CDRH1','SCM_pos_CDRH2','SCM_pos_CDRH3','SCM_pos_CDRL1','SCM_pos_CDRL2','SCM_pos_CDRL3','SCM_pos_CDR','SCM_pos_Hv','SCM_pos_Lv','SCM_pos_Fv']]
+    X = X.values
+    
+    Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
+    X = Scaler.transform(X)
+
+    for i in range(102):
+        file = 'ANN_logo' + str(i)
+        with open('trained_models/DeepViscosity_ANN_ensemble_models/'+file+'.json', 'r') as json_file:
+            loaded_model_json = json_file.read()
+        model = model_from_json(loaded_model_json)
+        model.load_weights('trained_models/DeepViscosity_ANN_ensemble_models/'+file+'.h5')
+        model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
+        pred = model.pedict(X,verbose=0)
+        final_pred = np.where(np.array(pred).mean(axis=0) >= 0.5, 1, 0)
+
+    df2 = pd.DataFrame({
+    'Name': name_list,
+    'ACSINS_transformed': final_pred,
+})
+    prediction_path = 'uploads/Viscosity_Pred.csv'
+    df2.to_csv(prediction_path, index=False)
+    
+    return descriptors_path,prediction_path
 
 
 
