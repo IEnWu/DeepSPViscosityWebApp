@@ -232,27 +232,18 @@ def process_file(filepath):
         model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
         model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         
-        pred = model.predict(X, verbose=0)  # Corrected 'predict' typo
-        final_preds.append(pred)  # Append predictions for later aggregation
+        pred = model.predict(X, verbose=0)  
+        final_preds.append(pred) 
+        
     final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
+    if len(final_pred) != len(name_list):
+        raise ValueError(f"Shape mismatch: final_pred length {len(final_pred)} != name_list length {len(name_list)}")
+    final_pred_flattened = final_pred.flatten()
+   
     df2 = pd.DataFrame({
     'Name': name_list,
-    'Viscosity': final_pred.flatten(),  # Ensure it's a 1D array
-    })
-    #for i in range(102):
-    #    file = 'ANN_logo_' + str(i)
-    #    with open('trained_models/DeepViscosity_ANN_ensemble_model/'+file+'.json', 'r') as json_file:
-    #        loaded_model_json = json_file.read()
-    #    model = model_from_json(loaded_model_json)
-    #    model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/'+file+'.h5')
-    #    model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
-    #    pred = model.pedict(X,verbose=0)
-    #    final_pred = np.where(np.array(pred).mean(axis=0) >= 0.5, 1, 0)
-        
-#    df2 = pd.DataFrame({
-#    'Name': name_list,
-#    'ACSINS_transformed': final_pred,
-#})
+    'Viscosity': final_pred_flattened,  
+})
     prediction_path = 'uploads/Viscosity_Pred.csv'
     df2.to_csv(prediction_path, index=False)
     
