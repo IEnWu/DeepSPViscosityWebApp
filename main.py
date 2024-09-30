@@ -219,19 +219,19 @@ def process_file(filepath):
             'SCM_pos_CDRH1','SCM_pos_CDRH2','SCM_pos_CDRH3','SCM_pos_CDRL1','SCM_pos_CDRL2','SCM_pos_CDRL3','SCM_pos_CDR','SCM_pos_Hv','SCM_pos_Lv','SCM_pos_Fv']]
     X = X.values
     
-    Scaler = joblib.load('/app/trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
+    Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X = Scaler.transform(X)
     
     for i in range(102):
-        file = 'ANN_logo' + str(i)
-        with open('/app/trained_models/DeepViscosity_ANN_ensemble_model/'+file+'.json', 'r') as json_file:
+        file = 'ANN_logo_' + str(i)
+        with open('trained_models/DeepViscosity_ANN_ensemble_model/'+file+'.json', 'r') as json_file:
             loaded_model_json = json_file.read()
         model = model_from_json(loaded_model_json)
-        model.load_weights('/app/trained_models/DeepViscosity_ANN_ensemble_model/'+file+'.h5')
+        model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/'+file+'.h5')
         model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         pred = model.pedict(X,verbose=0)
         final_pred = np.where(np.array(pred).mean(axis=0) >= 0.5, 1, 0)
-        print(final_pred)
+        
     df2 = pd.DataFrame({
     'Name': name_list,
     'ACSINS_transformed': final_pred,
