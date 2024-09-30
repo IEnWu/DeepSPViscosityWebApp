@@ -218,10 +218,10 @@ def process_file(filepath):
             'SCM_neg_CDRH1','SCM_neg_CDRH2','SCM_neg_CDRH3','SCM_neg_CDRL1','SCM_neg_CDRL2','SCM_neg_CDRL3','SCM_neg_CDR','SCM_neg_Hv','SCM_neg_Lv','SCM_neg_Fv',
             'SCM_pos_CDRH1','SCM_pos_CDRH2','SCM_pos_CDRH3','SCM_pos_CDRL1','SCM_pos_CDRL2','SCM_pos_CDRL3','SCM_pos_CDR','SCM_pos_Hv','SCM_pos_Lv','SCM_pos_Fv']]
     X = X.values
-    
+    print(X)
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X = Scaler.transform(X)
-
+    print(X)
     for i in range(102):
         file = 'ANN_logo' + str(i)
         with open('trained_models/DeepViscosity_ANN_ensemble_models/'+file+'.json', 'r') as json_file:
@@ -231,7 +231,7 @@ def process_file(filepath):
         model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         pred = model.pedict(X,verbose=0)
         final_pred = np.where(np.array(pred).mean(axis=0) >= 0.5, 1, 0)
-
+        print(final_pred)
     df2 = pd.DataFrame({
     'Name': name_list,
     'ACSINS_transformed': final_pred,
