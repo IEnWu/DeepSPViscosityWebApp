@@ -72,7 +72,7 @@
             <div id="result">
                 <h1>> Result</h1>
                 
-                {% if csv_path %}
+                {% if descriptors_path %}
                     
                     <div style="overflow-x: auto; max-height: 400px;">               
                         <table style="border: 1px solid black; border-collapse: collapse;">
@@ -85,7 +85,7 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <p>Download the result file here: <a href="{{ url_for('download_file', filename='DeepSP_descriptors.csv')}}">{{ csv_path }}</a></p>
+                    <p>Download the result file here: <a href="{{ url_for('download_file', filename='DeepSP_descriptors.csv')}}">{{ descriptors_path }}</a></p>
                 {% else %}
                     <p>No results available.</p>
                 {% endif %}
