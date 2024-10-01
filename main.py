@@ -227,11 +227,11 @@ def process_file(filepath):
     X = Scaler.transform(X)
 
 
-    json_file = open('trained_models/DeepViscosity_ANN_ensemble_model/ANN_logo_0.json', 'r')
+    json_file = open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
-    loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_model/ANN_logo_0.h5")
+    loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
     loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
     pred = loaded_model.predict(X,verbose=0)
     final_pred = np.where(np.array(pred) >= 0.5, 1, 0)
