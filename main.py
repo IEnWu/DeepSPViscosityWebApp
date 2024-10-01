@@ -214,17 +214,18 @@ def process_file(filepath):
     df1.to_csv(descriptors_path, index=False)
     
     detaset_pred = pd.read_csv(descriptors_path)
-    
-    X = detaset_pred[['SAP_pos_CDRH1', 'SAP_pos_CDRH2', 'SAP_pos_CDRH3', 'SAP_pos_CDRL1', 'SAP_pos_CDRL2', 
-                  'SAP_pos_CDRL3', 'SAP_pos_CDR', 'SAP_pos_Hv', 'SAP_pos_Lv', 'SAP_pos_Fv',
-                  'SCM_neg_CDRH1', 'SCM_neg_CDRH2', 'SCM_neg_CDRH3', 'SCM_neg_CDRL1', 'SCM_neg_CDRL2', 
-                  'SCM_neg_CDRL3', 'SCM_neg_CDR', 'SCM_neg_Hv', 'SCM_neg_Lv', 'SCM_neg_Fv',
-                  'SCM_pos_CDRH1', 'SCM_pos_CDRH2', 'SCM_pos_CDRH3', 'SCM_pos_CDRL1', 'SCM_pos_CDRL2', 
-                  'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
-    X = X.values
+    X_Vis = detaset_pred.iloc[:,1:]
+
+    #X_Vis = detaset_pred[['SAP_pos_CDRH1', 'SAP_pos_CDRH2', 'SAP_pos_CDRH3', 'SAP_pos_CDRL1', 'SAP_pos_CDRL2', 
+    #              'SAP_pos_CDRL3', 'SAP_pos_CDR', 'SAP_pos_Hv', 'SAP_pos_Lv', 'SAP_pos_Fv',
+    #              'SCM_neg_CDRH1', 'SCM_neg_CDRH2', 'SCM_neg_CDRH3', 'SCM_neg_CDRL1', 'SCM_neg_CDRL2', 
+    #             'SCM_neg_CDRL3', 'SCM_neg_CDR', 'SCM_neg_Hv', 'SCM_neg_Lv', 'SCM_neg_Fv',
+    #              'SCM_pos_CDRH1', 'SCM_pos_CDRH2', 'SCM_pos_CDRH3', 'SCM_pos_CDRL1', 'SCM_pos_CDRL2', 
+    #              'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
+    #X_Vis = X_Vis.values
     
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
-    X = Scaler.transform(X)
+    X_Vis = Scaler.transform(X_Vis)
 
 
     json_file = open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r')
@@ -233,7 +234,7 @@ def process_file(filepath):
     loaded_model = model_from_json(loaded_model_json)
     loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
     loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
-    pred = loaded_model.predict(X,verbose=0)
+    pred = loaded_model.predict(X_Vis,verbose=0)
     final_pred = np.where(np.array(pred) >= 0.5, 1, 0)
     final_pred_flattened = final_pred.flatten()
 
@@ -255,19 +256,19 @@ def process_file(filepath):
 
     #final_pred_flattened = final_pred.flatten()
     
-    colomn = ['Name','DeepViscosity_classes']
-    df2 = pd.concat([pd.DataFrame(name_list),pd.DataFrame(final_pred_flattened)])
-    df2.columns = colomn
+#    colomn = ['Name','DeepViscosity_classes']
+#    df2 = pd.concat([pd.DataFrame(name_list),pd.DataFrame(final_pred_flattened)])
+#    df2.columns = colomn
+#    prediction_path = 'uploads/Viscosity_Pred.csv'
+#    df2.to_csv(prediction_path, index=False)
+
+    df2 = pd.DataFrame({
+        'Name': name_list,
+        'DeepViscosity_classes': final_pred_flattened,      
+    })
+
     prediction_path = 'uploads/Viscosity_Pred.csv'
     df2.to_csv(prediction_path, index=False)
-
-    #df2 = pd.DataFrame({
-    #    'Name': name_list,
-    #    'Viscosity': final_pred_flattened,      
-    #})
-
-    #predictions_path = 'uploads/Viscosity_Pred.csv'
-    #df2.to_csv(predictions_path, index=False)
     
     
     return descriptors_path,prediction_path
