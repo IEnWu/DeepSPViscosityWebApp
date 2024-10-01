@@ -225,7 +225,7 @@ def process_file(filepath):
     
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X = Scaler.transform(X)
-    
+
     final_preds = []
 
     for i in range(102):
@@ -243,14 +243,21 @@ def process_file(filepath):
     final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
 
     final_pred_flattened = final_pred.flatten()
-   
-    df2 = pd.DataFrame({
-        'Name': name_list,
-        'Viscosity': final_pred_flattened,      
-    })
-
+    
+    colomn = ['Name','DeepViscosity_classes']
+    df2 = pd.concat([pd.DataFrame(name_list),pd.DataFrame(final_pred_flattened)])
+    df2.columns = colomn
     prediction_path = 'uploads/Viscosity_Pred.csv'
     df2.to_csv(prediction_path, index=False)
+    
+    #df2 = pd.DataFrame({
+    #    'Name': name_list,
+    #    'Viscosity': final_pred_flattened,      
+    #})
+
+    #prediction_path = 'uploads/Viscosity_Pred.csv'
+    #df2.to_csv(prediction_path, index=False)
+    
     
     return descriptors_path,prediction_path
 
