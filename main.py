@@ -11,6 +11,8 @@ import keras
 from keras.models import model_from_json
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adam
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.preprocessing import StandardScaler
 
 import os
 import subprocess
@@ -214,15 +216,15 @@ def process_file(filepath):
     df1.to_csv(descriptors_path, index=False)
     
     detaset_pred = pd.read_csv(descriptors_path)
-    X_Vis = detaset_pred.iloc[:,1:]
+    #X_Vis = detaset_pred.iloc[:,1:]
 
-    #X_Vis = detaset_pred[['SAP_pos_CDRH1', 'SAP_pos_CDRH2', 'SAP_pos_CDRH3', 'SAP_pos_CDRL1', 'SAP_pos_CDRL2', 
-    #              'SAP_pos_CDRL3', 'SAP_pos_CDR', 'SAP_pos_Hv', 'SAP_pos_Lv', 'SAP_pos_Fv',
-    #              'SCM_neg_CDRH1', 'SCM_neg_CDRH2', 'SCM_neg_CDRH3', 'SCM_neg_CDRL1', 'SCM_neg_CDRL2', 
-    #             'SCM_neg_CDRL3', 'SCM_neg_CDR', 'SCM_neg_Hv', 'SCM_neg_Lv', 'SCM_neg_Fv',
-    #              'SCM_pos_CDRH1', 'SCM_pos_CDRH2', 'SCM_pos_CDRH3', 'SCM_pos_CDRL1', 'SCM_pos_CDRL2', 
-    #              'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
-    #X_Vis = X_Vis.values
+    X_Vis = detaset_pred[['SAP_pos_CDRH1', 'SAP_pos_CDRH2', 'SAP_pos_CDRH3', 'SAP_pos_CDRL1', 'SAP_pos_CDRL2', 
+                  'SAP_pos_CDRL3', 'SAP_pos_CDR', 'SAP_pos_Hv', 'SAP_pos_Lv', 'SAP_pos_Fv',
+                  'SCM_neg_CDRH1', 'SCM_neg_CDRH2', 'SCM_neg_CDRH3', 'SCM_neg_CDRL1', 'SCM_neg_CDRL2', 
+                 'SCM_neg_CDRL3', 'SCM_neg_CDR', 'SCM_neg_Hv', 'SCM_neg_Lv', 'SCM_neg_Fv',
+                  'SCM_pos_CDRH1', 'SCM_pos_CDRH2', 'SCM_pos_CDRH3', 'SCM_pos_CDRL1', 'SCM_pos_CDRL2', 
+                  'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
+    X_Vis = X_Vis.values
     
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X_Vis = Scaler.transform(X_Vis)
@@ -269,8 +271,7 @@ def process_file(filepath):
 
     prediction_path = 'uploads/Viscosity_Pred.csv'
     df2.to_csv(prediction_path, index=False)
-    
-    
+        
     return descriptors_path,prediction_path
 
 
