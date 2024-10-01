@@ -269,10 +269,10 @@ def process_file(filepath):
         'DeepViscosity_classes': final_pred_flattened,      
     })
 
-    prediction_path = 'uploads/Viscosity_Pred.csv'
-    df2.to_csv(prediction_path, index=False)
+    predictions_path = 'uploads/Viscosity_Pred.csv'
+    df2.to_csv(predictions_path, index=False)
         
-    return descriptors_path,prediction_path
+    return descriptors_path,predictions_path
 
 
 

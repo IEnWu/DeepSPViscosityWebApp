@@ -70,11 +70,10 @@
             </div>
 
             <div id="result">
-                <h1>> Result</h1>
-                
+                <h1>>Results</h1>
                 {% if descriptors_path %}
-                    
-                    <div style="overflow-x: auto; max-height: 400px;">               
+                    <h2>DeepSP Descriptors</h2>
+                    <div style="overflow-x: auto; max-height: 400px;">
                         <table style="border: 1px solid black; border-collapse: collapse;">
                             {% for row in descriptors_data %}
                                 <tr>
@@ -85,9 +84,7 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <p>Download the result file here: <a href="{{ url_for('download_file', filename='DeepSP_descriptors.csv')}}">{{ descriptors_path }}</a></p>
-                {% else %}
-                    <p>No results available.</p>
+                    <p>Download the DeepSP Descriptors file here: <a href="{{ url_for('download_file', filename=descriptors_path) }}">{{ descriptors_path }}</a></p>
                 {% endif %}
             </div> 
         </section>
