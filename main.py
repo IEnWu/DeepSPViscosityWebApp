@@ -224,19 +224,22 @@ def process_file(filepath):
                  'SCM_neg_CDRL3', 'SCM_neg_CDR', 'SCM_neg_Hv', 'SCM_neg_Lv', 'SCM_neg_Fv',
                   'SCM_pos_CDRH1', 'SCM_pos_CDRH2', 'SCM_pos_CDRH3', 'SCM_pos_CDRL1', 'SCM_pos_CDRL2', 
                   'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
-    X_Vis = X_Vis.values
     
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X_Vis = Scaler.transform(X_Vis)
 
 
-    json_file = open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r')
-    loaded_model_json = json_file.read()
-    json_file.close()
+    with open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r') as json_file:
+        loaded_model_json = json_file.read()
+
     loaded_model = model_from_json(loaded_model_json)
     loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
+
+# Compile model (compilation needed for making predictions)
     loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
-    pred = loaded_model.predict(X_Vis,verbose=0)
+
+# Predict with the loaded model
+    pred = loaded_model.predict(X_Vis, verbose=0)
     final_pred = np.where(pred >= 0.5, 1, 0)
     final_pred_flattened = final_pred.flatten()
 
