@@ -236,7 +236,7 @@ def process_file(filepath):
     pred = loaded_model.predict(X,verbose=0)
     final_pred = np.where(np.array(pred) >= 0.5, 1, 0)
     final_pred_flattened = final_pred.flatten()
-    
+
     #final_preds = []
 
     #for i in range(102):
@@ -258,8 +258,8 @@ def process_file(filepath):
     colomn = ['Name','DeepViscosity_classes']
     df2 = pd.concat([pd.DataFrame(name_list),pd.DataFrame(final_pred_flattened)])
     df2.columns = colomn
-    predictions_path = 'uploads/Viscosity_Pred.csv'
-    df2.to_csv(predictions_path, index=False)
+    prediction_path = 'uploads/Viscosity_Pred.csv'
+    df2.to_csv(prediction_path, index=False)
 
     #df2 = pd.DataFrame({
     #    'Name': name_list,
@@ -270,7 +270,7 @@ def process_file(filepath):
     #df2.to_csv(predictions_path, index=False)
     
     
-    return descriptors_path,predictions_path
+    return descriptors_path,prediction_path
 
 
 
