@@ -235,7 +235,7 @@ def process_file(filepath):
     loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
     loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
     pred = loaded_model.predict(X_Vis,verbose=0)
-    final_pred = np.where(np.array(pred) >= 0.5, 1, 0)
+    final_pred = np.where(pred >= 0.5, 1, 0)
     final_pred_flattened = final_pred.flatten()
 
     #final_preds = []
