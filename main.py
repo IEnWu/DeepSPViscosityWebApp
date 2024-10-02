@@ -215,10 +215,11 @@ def process_file(filepath):
     descriptors_path = 'uploads/DeepSP_descriptors.csv'
     df1.to_csv(descriptors_path, index=False)
 
-    
+    ###### 
 
     detaset_pred = pd.read_csv(descriptors_path)
     #X_Vis = detaset_pred.iloc[:,1:]
+    print("hello world")
 
     X_Vis = detaset_pred[['SAP_pos_CDRH1', 'SAP_pos_CDRH2', 'SAP_pos_CDRH3', 'SAP_pos_CDRL1', 'SAP_pos_CDRL2', 
                   'SAP_pos_CDRL3', 'SAP_pos_CDR', 'SAP_pos_Hv', 'SAP_pos_Lv', 'SAP_pos_Fv',
@@ -231,7 +232,6 @@ def process_file(filepath):
     
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X_Vis = Scaler.transform(X_Vis)
-    print("hello world")
 
     with open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r') as json_file:
         loaded_model_json = json_file.read()
