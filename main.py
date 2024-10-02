@@ -214,7 +214,9 @@ def process_file(filepath):
     df1.columns = features
     descriptors_path = 'uploads/DeepSP_descriptors.csv'
     df1.to_csv(descriptors_path, index=False)
-    
+
+    print("hello world")
+
     detaset_pred = pd.read_csv(descriptors_path)
     #X_Vis = detaset_pred.iloc[:,1:]
 
@@ -224,6 +226,8 @@ def process_file(filepath):
                  'SCM_neg_CDRL3', 'SCM_neg_CDR', 'SCM_neg_Hv', 'SCM_neg_Lv', 'SCM_neg_Fv',
                   'SCM_pos_CDRH1', 'SCM_pos_CDRH2', 'SCM_pos_CDRH3', 'SCM_pos_CDRL1', 'SCM_pos_CDRL2', 
                   'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
+    
+
     
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.save') 
     X_Vis = Scaler.transform(X_Vis)
