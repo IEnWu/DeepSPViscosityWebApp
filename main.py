@@ -236,7 +236,8 @@ def process_file(filepath):
     
     X_Vis = X_Vis.values
     X_Vis = Scaler.transform(X_Vis)
-
+    print('Hello World')
+    
 #     with open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r') as json_file:
 #         loaded_model_json = json_file.read()
 
@@ -262,17 +263,18 @@ def process_file(filepath):
         loaded_model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
         loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         
-        pred = loaded_model.predict(X_Vis, verbose=0)
+        pred = loaded_model.predict(X_Vis, verbose=0).flatten()
         final_preds.append(pred) 
+        final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
+        
+        
+    
 
-    print('Hello World')    
-    final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
-
-    final_pred_flattened = final_pred.flatten()
+    #final_pred_flattened = final_pred.flatten()
 
     df2 = pd.DataFrame({
         'Name': name_list,
-        'DeepViscosity_classes': final_pred_flattened,      
+        'DeepViscosity_classes': final_pred,      
     })
 
     predictions_path = 'uploads/Viscosity_Pred.csv'
