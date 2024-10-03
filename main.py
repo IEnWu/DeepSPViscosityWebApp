@@ -267,17 +267,19 @@ def process_file(filepath):
         loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         ###### debugged
 
-        #print('Hello World')
         pred = predict_with_model(loaded_model, X_Vis)
         #pred = loaded_model.predict(X_Vis, verbose=0)
         final_preds.append(pred) 
         final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
+        final_pred_mean = np.array(final_preds).mean(axis=0).flatten()
+        final_pred_std = np.std(final_preds).flatten()
     
-    print('Hello World')    
     final_pred_flattened = final_pred.flatten()
 
     df2 = pd.DataFrame({
         'Name': name_list,
+        'Probability(std)':final_pred_std,
+        'Probability(mean)':final_pred_mean,
         'DeepViscosity_classes': final_pred_flattened,      
     })
 
