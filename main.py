@@ -230,60 +230,60 @@ def process_file(filepath):
                   'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
     
 
-    
-    Scaler = joblib.load('trained_models/DeepViscosity_scaler/scaler_ACSINS.joblib')
+    ###### Bug!!! ###### Can't load save.file
+    Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.joblib')
 
     print('Hello World')
-
+    X_Vis - X_Vis.values
     X_Vis = Scaler.transform(X_Vis)
 
-#     with open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r') as json_file:
-#         loaded_model_json = json_file.read()
+    with open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r') as json_file:
+        loaded_model_json = json_file.read()
 
-#     loaded_model = model_from_json(loaded_model_json)
-#     loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
+    loaded_model = model_from_json(loaded_model_json)
+    loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
 
-# # Compile model (compilation needed for making predictions)
-#     loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
+# Compile model (compilation needed for making predictions)
+    loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
 
-# # Predict with the loaded model
-#     pred = loaded_model.predict(X_Vis, verbose=0)
-#     final_pred = np.where(pred >= 0.5, 1, 0)
-#     final_pred_flattened = final_pred.flatten()
+# Predict with the loaded model
+    pred = loaded_model.predict(X_Vis, verbose=0)
+    final_pred = np.where(pred >= 0.5, 1, 0)
+    final_pred_flattened = final_pred.flatten()
 
-#     #final_preds = []
+    #final_preds = []
 
-#     #for i in range(102):
-#     #    file = 'ANN_logo_' + str(i)
-#     #    with open('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.json', 'r') as json_file:
-#     #        loaded_model_json = json_file.read()
-#     #    
-#     #    model = model_from_json(loaded_model_json)
-#     #    model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
+    #for i in range(102):
+    #    file = 'ANN_logo_' + str(i)
+    #    with open('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.json', 'r') as json_file:
+    #        loaded_model_json = json_file.read()
+    #    
+    #    model = model_from_json(loaded_model_json)
+    #    model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
         
         
-#     #    pred = model.predict(X, verbose=0)  
-#     #    final_preds.append(pred) 
+    #    pred = model.predict(X, verbose=0)  
+    #    final_preds.append(pred) 
         
-#     #final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
+    #final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
 
-#     #final_pred_flattened = final_pred.flatten()
+    #final_pred_flattened = final_pred.flatten()
     
-# #    colomn = ['Name','DeepViscosity_classes']
-# #    df2 = pd.concat([pd.DataFrame(name_list),pd.DataFrame(final_pred_flattened)])
-# #    df2.columns = colomn
-# #    prediction_path = 'uploads/Viscosity_Pred.csv'
-# #    df2.to_csv(prediction_path, index=False)
+#    colomn = ['Name','DeepViscosity_classes']
+#    df2 = pd.concat([pd.DataFrame(name_list),pd.DataFrame(final_pred_flattened)])
+#    df2.columns = colomn
+#    prediction_path = 'uploads/Viscosity_Pred.csv'
+#    df2.to_csv(prediction_path, index=False)
 
-#     df2 = pd.DataFrame({
-#         'Name': name_list,
-#         'DeepViscosity_classes': final_pred_flattened,      
-#     })
+    df2 = pd.DataFrame({
+        'Name': name_list,
+        'DeepViscosity_classes': final_pred_flattened,      
+    })
 
-#     predictions_path = 'uploads/Viscosity_Pred.csv'
-#     df2.to_csv(predictions_path, index=False)
+    predictions_path = 'uploads/Viscosity_Pred.csv'
+    df2.to_csv(predictions_path, index=False)
         
-#     return descriptors_path,predictions_path
+    return descriptors_path,predictions_path
 
 
 
