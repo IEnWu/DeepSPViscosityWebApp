@@ -262,9 +262,9 @@ def process_file(filepath):
         model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
         model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         
-        pred = model.predict(X, verbose=0)  
+        pred = model.predict(X_Vis, verbose=0)  
         final_preds.append(pred) 
-        
+
     print('Hello World')    
     final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
 
