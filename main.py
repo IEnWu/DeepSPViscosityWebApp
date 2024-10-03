@@ -256,30 +256,30 @@ def process_file(filepath):
 
     for i in range(102):
         file = 'ANN_logo_' + str(i)
-        with open('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.json', 'r') as json_file:
+        with open('trained_models/DeepViscosity_ANN_ensemble_models/' + file + '.json', 'r') as json_file:
             loaded_model_json = json_file.read()    
 
         loaded_model = model_from_json(loaded_model_json)
-        loaded_model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
-        #loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
-        print('Hello World')
+        loaded_model.load_weights('trained_models/DeepViscosity_ANN_ensemble_models/' + file + '.h5')
+        loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
+        #print('Hello World')
 
-        #pred = loaded_model.predict(X_Vis, verbose=0).flatten()
+        #pred = loaded_model.predict(X_Vis, verbose=0)
         #final_preds.append(pred) 
         #final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
-        
-        
-    #final_pred_flattened = final_pred.flatten()
+    
+    print('Hello World')    
+    # final_pred_flattened = final_pred.flatten()
 
     # df2 = pd.DataFrame({
     #     'Name': name_list,
-    #     'DeepViscosity_classes': final_pred,      
+    #     'DeepViscosity_classes': final_pred_flattened,      
     # })
 
     # predictions_path = 'uploads/Viscosity_Pred.csv'
     # df2.to_csv(predictions_path, index=False)
         
-    return descriptors_path#,predictions_path
+    # return descriptors_path,predictions_path
 
 
 
