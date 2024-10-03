@@ -234,7 +234,7 @@ def process_file(filepath):
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.joblib')
 
     
-    X_Vis - X_Vis.values
+    X_Vis = X_Vis.values
     X_Vis = Scaler.transform(X_Vis)
 
 #     with open('trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.json', 'r') as json_file:
@@ -258,11 +258,11 @@ def process_file(filepath):
         with open('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.json', 'r') as json_file:
             loaded_model_json = json_file.read()    
 
-        model = model_from_json(loaded_model_json)
-        model.load_weights('trained_models/DeepViscosity_ANN_ensemble_model/' + file + '.h5')
-        model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
+        loaded_model = model_from_json(loaded_model_json)
+        loaded_model.load_weights("trained_models/DeepViscosity_ANN_ensemble_models/ANN_logo_0.h5")
+        loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
         
-        pred = model.predict(X_Vis, verbose=0)  
+        pred = loaded_model.predict(X_Vis, verbose=0)
         final_preds.append(pred) 
 
     print('Hello World')    
