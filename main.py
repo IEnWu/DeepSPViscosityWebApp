@@ -230,7 +230,7 @@ def process_file(filepath):
                   'SCM_pos_CDRL3', 'SCM_pos_CDR', 'SCM_pos_Hv', 'SCM_pos_Lv', 'SCM_pos_Fv']]
     
 
-    ###### Bug!!! ###### Can't load save.file
+    ###### Bug!!! ###### Can't load save.file ### Fixed
     Scaler = joblib.load('trained_models/DeepViscosity_scaler/DeepViscosity_scaler.joblib')
 
     
@@ -262,24 +262,26 @@ def process_file(filepath):
         loaded_model = model_from_json(loaded_model_json)
         loaded_model.load_weights('trained_models/DeepViscosity_ANN_ensemble_models/' + file + '.h5')
         loaded_model.compile(optimizer=Adam(0.0001), metrics=['accuracy'])
+        ###### debugged
+
         #print('Hello World')
 
-        #pred = loaded_model.predict(X_Vis, verbose=0)
-        #final_preds.append(pred) 
-        #final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
+        pred = loaded_model.predict(X_Vis, verbose=0)
+        final_preds.append(pred) 
+        final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
     
     print('Hello World')    
-    # final_pred_flattened = final_pred.flatten()
+    final_pred_flattened = final_pred.flatten()
 
-    # df2 = pd.DataFrame({
-    #     'Name': name_list,
-    #     'DeepViscosity_classes': final_pred_flattened,      
-    # })
+    df2 = pd.DataFrame({
+        'Name': name_list,
+        'DeepViscosity_classes': final_pred_flattened,      
+    })
 
-    # predictions_path = 'uploads/Viscosity_Pred.csv'
-    # df2.to_csv(predictions_path, index=False)
+    predictions_path = 'uploads/Viscosity_Pred.csv'
+    df2.to_csv(predictions_path, index=False)
         
-    # return descriptors_path,predictions_path
+    return descriptors_path,predictions_path
 
 
 
