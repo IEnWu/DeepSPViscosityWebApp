@@ -25,4 +25,5 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 # Run app.py when the container launches
-CMD ["gunicorn", "app:app"]
+CMD ["gunicorn", "--timeout", "120", "app:app"]
+

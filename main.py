@@ -253,6 +253,9 @@ def process_file(filepath):
 #    final_pred_flattened = final_pred.flatten()
 
     final_preds = []
+    @tf.function
+    def predict_with_model(model, input_data):
+        return model(input_data, training=False)
 
     for i in range(102):
         file = 'ANN_logo_' + str(i)
@@ -265,8 +268,8 @@ def process_file(filepath):
         ###### debugged
 
         #print('Hello World')
-
-        pred = loaded_model.predict(X_Vis, verbose=0)
+        pred = predict_with_model(loaded_model, X_Vis)
+        #pred = loaded_model.predict(X_Vis, verbose=0)
         final_preds.append(pred) 
         final_pred = np.where(np.array(final_preds).mean(axis=0) >= 0.5, 1, 0)
     
