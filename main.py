@@ -24,9 +24,9 @@ import joblib
 
 def format_predictions(predictions):
     if len(predictions.shape) > 1:
-        formatted = np.round(predictions, 3)
+        formatted = np.round(predictions, 2)
     else:
-        formatted = [round(pred, 3) for pred in predictions]
+        formatted = [round(pred, 2) for pred in predictions]
     return formatted
 
 def process_file(filepath):
@@ -278,8 +278,8 @@ def process_file(filepath):
 
     df2 = pd.DataFrame({
         'Name': name_list,
-        'Probability(std)':final_pred_std,
-        'Probability(mean)':final_pred_mean,
+        'Probability (mean)':format_predictions(final_pred_mean),
+        'Probability (std)':format_predictions(final_pred_std),
         'DeepViscosity_classes': final_pred_flattened,      
     })
 
